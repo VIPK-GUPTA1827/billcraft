@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoiciFly - Premium Invoice & Client Manager</title>
+    <!-- Modern Typography: Plus Jakarta Sans & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#070913">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('Service Worker Registered!', reg.scope))
+                    .catch(err => console.error('Service Worker Registration Failed:', err));
+            });
+        }
+    </script>
+</head>
+<body>
+    <!-- Premium Glowing Background Elements (Hidden during Print) -->
+    <div class="glow-bg bg-1"></div>
+    <div class="glow-bg bg-2"></div>
+
+    <div class="app-container">
+        <!-- Top Navbar (Hidden during Print) -->
+        <header class="app-header no-print">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 7H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 17H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h1>InvoiciFly <span>Studio</span></h1>
+            </div>
+            
+            <div class="header-actions">
+                <!-- Theme Switcher -->
+                <div class="theme-switcher">
+                    <label for="themeSelect" class="sr-only">Theme</label>
+                    <select id="themeSelect" class="premium-select">
+                        <option value="midnight">🌌 Midnight Nebula</option>
+                        <option value="emerald">🌿 Emerald Mint</option>
+                        <option value="royal">👑 Royal Gold</option>
+                        <option value="arctic">❄️ Arctic Minimal</option>
+                    </select>
+                </div>
+
+                <!-- Template Selector -->
+                <div class="template-switcher">
+                    <label for="templateSelect" class="sr-only">Layout Style</label>
+                    <select id="templateSelect" class="premium-select">
+                        <option value="modern">🎨 Modern Creative</option>
+                        <option value="corporate">💼 Corporate Classic</option>
+                        <option value="minimalist">✨ Minimalist Elegant</option>
+                    </select>
+                </div>
+
+                <!-- Save Invoice Button -->
+                <button id="saveInvoiceBtn" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    <span>Save Invoice</span>
+                </button>
+
+                <!-- Save/Print Button -->
+                <button id="printBtn" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    <span>Download PDF / Print</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace-grid">
+            
+            <!-- Left Side: Creator Controls & CRM (Hidden during Print) -->
+            <section class="control-panel no-print">
+                <!-- Navigation Tabs -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="builder">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon><line x1="3" y1="22" x2="21" y2="22"></line></svg>
+                        Invoice Builder
+                    </button>
+                    <button class="tab-btn" data-tab="crm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Clients CRM
+                    </button>
+                    <button class="tab-btn" data-tab="dashboard">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                        Dashboard
+                    </button>
+                </div>
+
+                <div class="tabs-content">
+                    <!-- BUILDER TAB -->
+                    <div class="tab-pane active" id="builderTab">
+                        <div class="panel-section">
+                            <h3>📝 Invoice Metadata</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="invNumber">Invoice #</label>
+                                    <input type="text" id="invNumber" value="INV-2026-001" placeholder="e.g. INV-001">
+                                </div>
+                                <div class="form-group">
+                                    <label for="invCurrency">Currency</label>
+                                    <select id="invCurrency" class="premium-input-style">
+                                        <option value="₹">INR (₹)</option>
+                                        <option value="$">USD ($)</option>
+                                        <option value="€">EUR (€)</option>
+                                        <option value="£">GBP (£)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="invDate">Issue Date</label>
+                                    <input type="date" id="invDate">
+                                </div>
+                                <div class="form-group">
+                                    <label for="invDue">Due Date</label>
+                                    <input type="date" id="invDue">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-section">
+                            <div class="section-title-action">
+                                <h3>🏢 Business Details (You)</h3>
+                                <button type="button" id="unlockBusinessBtn" class="btn btn-secondary btn-xs" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                    🔒 Locked (Click to Edit)
+                                </button>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group col-span-2">
+                                    <label for="senderName">Company Name / Your Name</label>
+                                    <input type="text" id="senderName" value="Apex Digital Studio" placeholder="e.g. Acme Corp" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="senderEmail">Email Address</label>
+                                    <input type="email" id="senderEmail" value="hello@apexdigital.com" placeholder="e.g. contact@acme.com" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="senderPhone">Phone Number</label>
+                                    <input type="text" id="senderPhone" value="+91 98765 43210" placeholder="e.g. +91 99999 88888" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="senderAddress">Address</label>
+                                    <textarea id="senderAddress" rows="2" placeholder="e.g. 101, Business Park, Mumbai" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">404 Creative Tower, Bandra West, Mumbai, MH - 400050</textarea>
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="senderSignature">Digital Signature Text (Leave blank for physical sign)</label>
+                                    <input type="text" id="senderSignature" value="Apex Digital Studio" placeholder="e.g. Your Name or Company" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-section">
+                            <div class="section-title-action">
+                                <h3>👤 Client Details (Recipient)</h3>
+                                <button type="button" id="loadClientBtn" class="btn btn-secondary btn-xs">
+                                    Load from CRM
+                                </button>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group col-span-2">
+                                    <label for="clientName">Client Name / Business Name</label>
+                                    <input type="text" id="clientName" value="Vipul Sharma" placeholder="e.g. John Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientEmail">Client Email</label>
+                                    <input type="email" id="clientEmail" value="vipul@gmail.com" placeholder="e.g. client@gmail.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientPhone">Client Phone</label>
+                                    <input type="text" id="clientPhone" value="+91 88888 77777" placeholder="e.g. +91 ...">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="clientAddress">Client Address</label>
+                                    <textarea id="clientAddress" rows="2" placeholder="e.g. Suite 4B, MG Road, Bangalore">Flat 202, Heights Apartment, Andheri East, Mumbai - 400069</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-section">
+                            <div class="section-title-action">
+                                <h3>📦 Line Items</h3>
+                                <button type="button" id="addItemBtn" class="btn btn-secondary btn-sm">
+                                    + Add Item
+                                </button>
+                            </div>
+                            <div id="itemsContainer" class="items-editor-container">
+                                <!-- Dynamic item rows will be injected here by JS -->
+                            </div>
+                        </div>
+
+                        <div class="panel-section">
+                            <h3>📊 Adjustments & Terms</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="discountRate">Discount (%)</label>
+                                    <input type="number" id="discountRate" value="10" min="0" max="100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="taxType">Tax Type</label>
+                                    <select id="taxType" class="premium-input-style">
+                                        <option value="gst" selected>CGST + SGST (Local)</option>
+                                        <option value="igst">IGST (Inter-State)</option>
+                                        <option value="vat">VAT / Flat Tax (%)</option>
+                                        <option value="none">No Tax / Simple</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-span-2" id="taxRateGroup">
+                                    <label for="taxRate">Combined Tax Rate (%)</label>
+                                    <input type="number" id="taxRate" value="18" min="0" max="100">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="invNotes">Payment Terms & Notes</label>
+                                    <textarea id="invNotes" rows="2" placeholder="e.g. Thank you for your business! Bank transfer to HDFC Account No: 12345...">Thank you for your business! Payment is requested within 15 days of invoice date. 
+HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CRM TAB -->
+                    <div class="tab-pane" id="crmTab">
+                        <div class="panel-section">
+                            <h3>➕ Add New CRM Client</h3>
+                            <form id="crmForm">
+                                <div class="form-grid">
+                                    <div class="form-group col-span-2">
+                                        <label for="crmName">Client / Company Name</label>
+                                        <input type="text" id="crmName" required placeholder="e.g. Tech Solutions Inc">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="crmEmail">Email Address</label>
+                                        <input type="email" id="crmEmail" placeholder="e.g. billing@techsolutions.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="crmPhone">Phone Number</label>
+                                        <input type="text" id="crmPhone" placeholder="e.g. +91 99999 88888">
+                                    </div>
+                                    <div class="form-group col-span-2">
+                                        <label for="crmAddress">Postal Address</label>
+                                        <textarea id="crmAddress" rows="2" placeholder="e.g. Road 12, Sector 5, Salt Lake, Kolkata"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full-width mt-3">
+                                    Save Client to CRM
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="panel-section">
+                            <h3>👥 Saved Clients List</h3>
+                            <div id="crmListContainer" class="crm-list-container">
+                                <!-- Saved clients will be rendered here dynamically -->
+                                <p class="empty-state-text">No clients saved yet. Add a client above to begin building your CRM database!</p>
+                            </div>
+                        </div>
+
+                        <!-- Customer Credit Ledger (Khata Book) -->
+                        <div class="panel-section" id="crmLedgerSection" style="display: none; margin-top: 24px;">
+                            <div class="section-title-action">
+                                <h3>📖 Credit Ledger: <span id="ledgerClientName">---</span></h3>
+                                <button type="button" id="closeLedgerBtn" class="btn btn-secondary btn-xs" style="background: rgba(255, 255, 255, 0.05);">✕ Close</button>
+                            </div>
+                            
+                            <div class="kpi-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                                <div class="kpi-card" style="padding: 12px;">
+                                    <div class="kpi-label" style="font-size: 10px;">Outstanding Debt</div>
+                                    <div class="kpi-value" id="ledgerOutstandingBalance" style="font-size: 18px; color: var(--color-danger);">₹0.00</div>
+                                </div>
+                                <div class="kpi-card" style="padding: 12px;">
+                                    <div class="kpi-label" style="font-size: 10px;">Total Billed</div>
+                                    <div class="kpi-value" id="ledgerTotalBilled" style="font-size: 18px; color: var(--text-main);">₹0.00</div>
+                                </div>
+                            </div>
+                            
+                            <h4 style="font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; letter-spacing: 0.5px;">Transaction History</h4>
+                            <div class="history-table-container" style="max-height: 250px; overflow-y: auto;">
+                                <table class="history-table" style="font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice #</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ledgerHistoryBody">
+                                        <!-- Dynamically populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DASHBOARD TAB -->
+                    <div class="tab-pane" id="dashboardTab">
+                        <!-- KPI Cards Grid -->
+                        <div class="kpi-grid">
+                            <div class="kpi-card">
+                                <div class="kpi-label">Total Earnings</div>
+                                <div class="kpi-value" id="kpiTotalEarnings">₹0.00</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Paid Invoices</div>
+                                <div class="kpi-value" id="kpiPaidCount">0</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Pending Invoices</div>
+                                <div class="kpi-value" id="kpiPendingCount">0</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sales Chart -->
+                        <div class="panel-section dashboard-chart-section">
+                            <h3>📈 Sales Growth Over Time</h3>
+                            <div class="chart-container">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Data Security / Backup Section -->
+                        <div class="panel-section dashboard-backup-section" style="margin-top: 24px;">
+                            <h3>💾 Data Backup & Recovery</h3>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; text-align: left;">
+                                Keep your business data safe! Export all invoice records and customer data to a secure backup file, or restore it in a single click.
+                            </p>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <button type="button" id="exportBackupBtn" class="btn btn-secondary" style="flex: 1; min-width: 140px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Download Backup
+                                </button>
+                                <button type="button" id="importBackupBtn" class="btn btn-primary" style="flex: 1; min-width: 140px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                    Upload Backup
+                                </button>
+                                <input type="file" id="backupFileInput" accept=".json" style="display: none;">
+                            </div>
+                        </div>
+
+                        <!-- Invoices History -->
+                        <div class="panel-section">
+                            <h3>📜 Invoice History</h3>
+                            <div class="history-table-container">
+                                <table class="history-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice #</th>
+                                            <th>Client</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyListBody">
+                                        <!-- Injected by JS -->
+                                        <tr>
+                                            <td colspan="5" class="empty-state-text">No invoices saved yet. Save your first invoice to view history!</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: High Fidelity Live Invoice Preview -->
+            <section class="preview-panel">
+                <div class="preview-header no-print">
+                    <span class="preview-badge">✨ Live High-Fidelity Preview</span>
+                    <span class="preview-tip">(Looks identical to the printed PDF/Paper)</span>
+                </div>
+                
+                <!-- Invoice Paper Mockup -->
+                <div class="invoice-paper" id="invoicePaper" data-layout="modern">
+                    <!-- Dynamic layout elements injected by JS inside layouts -->
+                    <div class="invoice-inner-content">
+                        <!-- Top Banner / Accents (layout-specific) -->
+                        <div class="layout-accent-bar"></div>
+
+                        <!-- Invoice Header -->
+                        <div class="invoice-brand-block">
+                            <div class="brand-left">
+                                <h2 id="prevSenderName" class="invoice-title-sender">Apex Digital Studio</h2>
+                                <p id="prevSenderEmail" class="invoice-text-sender">hello@apexdigital.com</p>
+                                <p id="prevSenderPhone" class="invoice-text-sender">+91 98765 43210</p>
+                                <p id="prevSenderAddress" class="invoice-text-sender">404 Creative Tower, Bandra West, Mumbai, MH - 400050</p>
+                            </div>
+                            <div class="brand-right">
+                                <h1 class="invoice-large-title">INVOICE</h1>
+                                <div class="meta-badge-grid">
+                                    <div class="meta-row">
+                                        <span class="meta-lbl">Invoice #:</span>
+                                        <span id="prevInvNumber" class="meta-val font-bold">INV-2026-001</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span class="meta-lbl">Date:</span>
+                                        <span id="prevInvDate" class="meta-val">2026-05-21</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span class="meta-lbl">Due Date:</span>
+                                        <span id="prevInvDue" class="meta-val font-danger">2026-06-05</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="invoice-divider">
+
+                        <!-- Client and Billing section -->
+                        <div class="invoice-billing-block">
+                            <div class="billing-box">
+                                <h3 class="billing-heading">Billed To:</h3>
+                                <h4 id="prevClientName" class="billing-client-name">Vipul Sharma</h4>
+                                <p id="prevClientEmail" class="billing-client-detail">vipul@gmail.com</p>
+                                <p id="prevClientPhone" class="billing-client-detail">+91 88888 77777</p>
+                                <p id="prevClientAddress" class="billing-client-detail">Flat 202, Heights Apartment, Andheri East, Mumbai - 400069</p>
+                            </div>
+                        </div>
+
+                        <!-- Table of Items -->
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-desc">Item Description</th>
+                                    <th class="col-qty text-center">Qty</th>
+                                    <th class="col-rate text-right">Rate</th>
+                                    <th class="col-total text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prevItemsBody">
+                                <!-- Dynamic rows rendered here -->
+                            </tbody>
+                        </table>
+
+                        <!-- Calculations block -->
+                        <div class="invoice-total-block">
+                            <div class="blank-space"></div>
+                            <div class="totals-table">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="prevSubtotal" class="font-semibold">$0.00</span>
+                                </div>
+                                <div class="total-row discount-line">
+                                    <span id="prevDiscountLabel">Discount (10%):</span>
+                                    <span id="prevDiscount" class="font-success">-$0.00</span>
+                                </div>
+                                <div id="prevTaxRowsContainer" class="tax-rows-container">
+                                    <!-- Dynamic tax breakdown rows go here -->
+                                </div>
+                                <div class="total-row grand-total-row">
+                                    <span>Total Due:</span>
+                                    <span id="prevGrandTotal" class="grand-total-amount">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer and Terms -->
+                        <div class="invoice-footer-block">
+                            <div class="footer-notes">
+                                <h4 class="notes-heading">Payment Terms & Instructions:</h4>
+                                <p id="prevNotes">Thank you for your business! Payment is requested within 15 days of invoice date. 
+HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</p>
+                            </div>
+                            <div class="footer-sign">
+                                <div id="prevSignatureText" class="signature-cursive">Apex Digital Studio</div>
+                                <div class="signature-line"></div>
+                                <p class="signature-lbl">Authorized Signature</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals (Hidden during Print) -->
+    <div id="clientModal" class="modal no-print">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select Client from CRM</h2>
+                <button id="closeModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div id="modalCrmList" class="modal-body-list">
+                <!-- Selectable clients rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin PIN Prompt Modal -->
+    <div id="pinModal" class="modal no-print">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>🔐 Admin Verification</h2>
+                <button id="closePinModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div style="padding: 24px;">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">Enter Admin PIN to unlock business details for editing:</p>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="password" id="pinInput" style="text-align: center; font-size: 20px; letter-spacing: 8px; font-weight: 700; width: 100%;" placeholder="••••" maxlength="4">
+                </div>
+                <div id="pinErrorMessage" style="color: var(--color-danger); font-size: 12px; margin-bottom: 16px; text-align: center; display: none; font-weight: 600;">
+                    ❌ Incorrect Admin PIN! Access denied.
+                </div>
+                <button type="button" id="submitPinBtn" class="btn btn-primary btn-full-width">Verify PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

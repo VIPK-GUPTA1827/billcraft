@@ -1278,4 +1278,22 @@ document.addEventListener('DOMContentLoaded', () => {
     printBtn.addEventListener('click', () => {
         window.print();
     });
+
+    // -------------------------------------------------------------
+    // RESPONSIVE SCREEN VIEWPORT SCALING FOR MOBILE PREVIEW
+    // -------------------------------------------------------------
+    function updateMobileScale() {
+        const width = window.innerWidth;
+        if (width <= 848) {
+            const padding = width <= 480 ? 24 : 32; // 2 * 12px or 2 * 16px padding
+            const scale = (width - padding) / 800;
+            document.documentElement.style.setProperty('--invoice-scale', scale);
+        } else {
+            document.documentElement.style.removeProperty('--invoice-scale');
+        }
+    }
+
+    // Run on load and window resize
+    updateMobileScale();
+    window.addEventListener('resize', updateMobileScale);
 });

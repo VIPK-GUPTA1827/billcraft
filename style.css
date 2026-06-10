@@ -1331,10 +1331,13 @@ body {
     }
 
     .invoice-paper {
-        /* Scale down the invoice to fit the screen width */
-        transform: scale(calc((100vw - (2 * var(--container-padding))) / 800)) !important;
-        transform-origin: top center !important;
-        margin-bottom: calc(-1050px * (1 - ((100vw - (2 * var(--container-padding))) / 800))) !important;
+        width: 800px !important;
+        min-width: 800px !important;
+        /* Scale down the invoice to fit the screen width dynamically */
+        transform: scale(var(--invoice-scale, 1)) !important;
+        transform-origin: top left !important;
+        align-self: flex-start !important;
+        margin-bottom: calc(-1050px * (1 - var(--invoice-scale, 1))) !important;
     }
 }
 

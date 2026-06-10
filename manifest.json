@@ -1,0 +1,23 @@
+{
+  "short_name": "BillCraft",
+  "name": "BillCraft Studio - Invoice & CRM",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#070913",
+  "theme_color": "#070913",
+  "display": "standalone",
+  "orientation": "portrait"
+}

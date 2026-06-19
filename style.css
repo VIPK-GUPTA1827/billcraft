@@ -1192,6 +1192,54 @@ body {
 }
 
 /* -------------------------------------------------------------
+ * AUTOCOMPLETE SUGGESTIONS
+ * ------------------------------------------------------------- */
+.autocomplete-wrapper {
+    position: relative;
+}
+
+.autocomplete-suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--theme-panel-bg);
+    border: 1px solid var(--theme-border);
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: var(--shadow-premium);
+    backdrop-filter: var(--glass-blur);
+    display: none;
+    flex-direction: column;
+}
+
+.autocomplete-suggestions.active {
+    display: flex;
+}
+
+.suggestion-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-main);
+    transition: all 0.15s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    text-align: left;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover, .suggestion-item.highlighted {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-primary);
+}
+
+
+/* -------------------------------------------------------------
  * MODAL SYSTEM
  * ------------------------------------------------------------- */
 .modal {

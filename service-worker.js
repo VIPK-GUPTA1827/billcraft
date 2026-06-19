@@ -1,8 +1,8 @@
-const CACHE_NAME = 'billcraft-cache-v2';
+const CACHE_NAME = 'billcraft-cache-v3';
 const ASSETS = [
   './index.html',
-  './style.css?v=1.0.1',
-  './app.js?v=1.0.1',
+  './style.css?v=1.0.2',
+  './app.js?v=1.0.2',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'

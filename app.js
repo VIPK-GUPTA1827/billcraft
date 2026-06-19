@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let activeLedgerClientId = null;
     let savedInvoices = JSON.parse(localStorage.getItem('invoicifly_invoices')) || [];
+    let savedProducts = JSON.parse(localStorage.getItem('invoicifly_products')) || [
+        { id: 'prod-1', name: 'Premium Web Application Development', rate: 15000 },
+        { id: 'prod-2', name: 'Modern UI/UX Glassmorphism Styling', rate: 5000 },
+        { id: 'prod-3', name: 'Search Engine Optimization (SEO)', rate: 3000 },
+        { id: 'prod-4', name: 'Monthly Maintenance & Support', rate: 2500 }
+    ];
 
     // Core DOM elements
     const htmlElement = document.documentElement;
@@ -97,6 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const crmForm = document.getElementById('crmForm');
     const crmListContainer = document.getElementById('crmListContainer');
 
+    // Inventory Elements
+    const inventoryForm = document.getElementById('inventoryForm');
+    const inventoryListContainer = document.getElementById('inventoryListContainer');
+
     // Tab buttons
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -126,9 +136,36 @@ document.addEventListener('DOMContentLoaded', () => {
         prevInvDue.textContent = dueDateString;
     }
 
+    function loadBusinessProfile() {
+        const profile = JSON.parse(localStorage.getItem('invoicifly_business_profile'));
+        if (profile) {
+            senderNameInput.value = profile.name || '';
+            prevSenderName.textContent = profile.name || '---';
+
+            senderEmailInput.value = profile.email || '';
+            prevSenderEmail.textContent = profile.email || '---';
+
+            senderPhoneInput.value = profile.phone || '';
+            prevSenderPhone.textContent = profile.phone || '---';
+
+            senderAddressInput.value = profile.address || '';
+            prevSenderAddress.textContent = profile.address || '---';
+
+            senderSignatureInput.value = profile.signature || '';
+            prevSignatureText.textContent = profile.signature || '';
+            if ((profile.signature || '').trim() === '') {
+                prevSignatureText.style.display = 'none';
+            } else {
+                prevSignatureText.style.display = 'inline-block';
+            }
+        }
+    }
+
     // Save initial load
     initializeDates();
+    loadBusinessProfile();
     renderCrmList();
+    renderInventoryList();
 
     // -------------------------------------------------------------
     // TAB NAVIGATION SWITCHING
@@ -192,6 +229,17 @@ document.addEventListener('DOMContentLoaded', () => {
             unlockBusinessBtn.style.background = "rgba(239, 68, 68, 0.1)";
             unlockBusinessBtn.style.color = "#ef4444";
             unlockBusinessBtn.style.borderColor = "rgba(239, 68, 68, 0.2)";
+
+            // Auto-save business profile to localStorage
+            const businessProfile = {
+                name: senderNameInput.value,
+                email: senderEmailInput.value,
+                phone: senderPhoneInput.value,
+                address: senderAddressInput.value,
+                signature: senderSignatureInput.value
+            };
+            localStorage.setItem('invoicifly_business_profile', JSON.stringify(businessProfile));
+            showToast("Business Profile saved successfully!");
         }
     });
 
@@ -271,6 +319,90 @@ document.addEventListener('DOMContentLoaded', () => {
     syncText(clientPhoneInput, prevClientPhone);
     syncText(clientAddressInput, prevClientAddress);
 
+    // Client Name Autocomplete
+    const clientAutocomplete = document.getElementById('clientAutocomplete');
+    let clientMatches = [];
+    let highlightedClientIdx = -1;
+
+    clientNameInput.addEventListener('input', () => {
+        const val = clientNameInput.value.trim().toLowerCase();
+        clientAutocomplete.innerHTML = '';
+        highlightedClientIdx = -1;
+
+        if (!val) {
+            clientAutocomplete.classList.remove('active');
+            clientMatches = [];
+            return;
+        }
+
+        clientMatches = savedClients.filter(c => c.name.toLowerCase().includes(val));
+
+        if (clientMatches.length === 0) {
+            clientAutocomplete.classList.remove('active');
+            return;
+        }
+
+        clientMatches.forEach((client, idx) => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            item.textContent = client.name;
+            item.addEventListener('click', () => {
+                applyClientData(client.id);
+                clientAutocomplete.classList.remove('active');
+            });
+            clientAutocomplete.appendChild(item);
+        });
+
+        clientAutocomplete.classList.add('active');
+    });
+
+    clientNameInput.addEventListener('keydown', (e) => {
+        if (!clientAutocomplete.classList.contains('active')) return;
+
+        const items = clientAutocomplete.querySelectorAll('.suggestion-item');
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            highlightedClientIdx = (highlightedClientIdx + 1) % items.length;
+            updateClientSuggestionsHighlight(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            highlightedClientIdx = (highlightedClientIdx - 1 + items.length) % items.length;
+            updateClientSuggestionsHighlight(items);
+        } else if (e.key === 'Enter') {
+            if (highlightedClientIdx > -1) {
+                e.preventDefault();
+                items[highlightedClientIdx].click();
+            }
+        } else if (e.key === 'Escape') {
+            clientAutocomplete.classList.remove('active');
+        }
+    });
+
+    function updateClientSuggestionsHighlight(items) {
+        items.forEach((item, idx) => {
+            if (idx === highlightedClientIdx) {
+                item.classList.add('highlighted');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('highlighted');
+            }
+        });
+    }
+
+    // Click outside to close autocomplete lists
+    document.addEventListener('click', (e) => {
+        if (e.target !== clientNameInput && e.target !== clientAutocomplete) {
+            clientAutocomplete.classList.remove('active');
+        }
+        document.querySelectorAll('.item-autocomplete').forEach(ac => {
+            const associatedInput = ac.previousElementSibling;
+            if (e.target !== associatedInput && e.target !== ac) {
+                ac.classList.remove('active');
+            }
+        });
+    });
+
     // Notes syncing with newline formatting preserved
     invNotesInput.addEventListener('input', () => {
         prevNotes.textContent = invNotesInput.value || 'Thank you for your business!';
@@ -314,9 +446,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
-                <div class="form-group">
+                <div class="form-group autocomplete-wrapper">
                     ${index === 0 ? '<label>Description</label>' : ''}
-                    <input type="text" class="item-desc" data-index="${index}" value="${item.description}" placeholder="Description">
+                    <input type="text" class="item-desc" data-index="${index}" value="${item.description}" placeholder="Description" autocomplete="off">
+                    <div class="autocomplete-suggestions item-autocomplete" data-index="${index}"></div>
                 </div>
                 <div class="form-group">
                     ${index === 0 ? '<label>Qty</label>' : ''}
@@ -335,10 +468,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add event listeners for dynamic inputs
         document.querySelectorAll('.item-desc').forEach(input => {
+            const idx = parseInt(input.getAttribute('data-index'));
+            const suggestContainer = input.nextElementSibling;
+
             input.addEventListener('input', (e) => {
-                const idx = parseInt(e.target.getAttribute('data-index'));
+                const val = e.target.value.trim().toLowerCase();
                 invoiceItems[idx].description = e.target.value;
                 updatePreviewItems();
+
+                suggestContainer.innerHTML = '';
+
+                if (!val) {
+                    suggestContainer.classList.remove('active');
+                    return;
+                }
+
+                const matches = savedProducts.filter(p => p.name.toLowerCase().includes(val));
+
+                if (matches.length === 0) {
+                    suggestContainer.classList.remove('active');
+                    return;
+                }
+
+                matches.forEach((prod) => {
+                    const item = document.createElement('div');
+                    item.className = 'suggestion-item';
+                    item.textContent = prod.name;
+                    item.addEventListener('click', () => {
+                        input.value = prod.name;
+                        invoiceItems[idx].description = prod.name;
+                        invoiceItems[idx].rate = prod.rate;
+                        
+                        const rateInput = input.closest('.item-row').querySelector('.item-rate');
+                        if (rateInput) {
+                            rateInput.value = prod.rate;
+                        }
+
+                        suggestContainer.classList.remove('active');
+                        calculateInvoice();
+                    });
+                    suggestContainer.appendChild(item);
+                });
+
+                suggestContainer.classList.add('active');
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (!suggestContainer.classList.contains('active')) return;
+
+                const items = suggestContainer.querySelectorAll('.suggestion-item');
+                let rowHighlightedIdx = Array.from(items).findIndex(item => item.classList.contains('highlighted'));
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    rowHighlightedIdx = (rowHighlightedIdx + 1) % items.length;
+                    items.forEach((item, i) => {
+                        if (i === rowHighlightedIdx) {
+                            item.classList.add('highlighted');
+                            item.scrollIntoView({ block: 'nearest' });
+                        } else {
+                            item.classList.remove('highlighted');
+                        }
+                    });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    rowHighlightedIdx = (rowHighlightedIdx - 1 + items.length) % items.length;
+                    items.forEach((item, i) => {
+                        if (i === rowHighlightedIdx) {
+                            item.classList.add('highlighted');
+                            item.scrollIntoView({ block: 'nearest' });
+                        } else {
+                            item.classList.remove('highlighted');
+                        }
+                    });
+                } else if (e.key === 'Enter') {
+                    if (rowHighlightedIdx > -1) {
+                        e.preventDefault();
+                        items[rowHighlightedIdx].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    suggestContainer.classList.remove('active');
+                }
             });
         });
 
@@ -686,6 +896,110 @@ document.addEventListener('DOMContentLoaded', () => {
             activeLedgerClientId = null;
         });
     }
+
+    // -------------------------------------------------------------
+    // PRODUCT CATALOG CRUD SYSTEM
+    // -------------------------------------------------------------
+    inventoryForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const prodName = document.getElementById('prodName').value.trim();
+        const prodRate = parseFloat(document.getElementById('prodRate').value) || 0;
+
+        const newProduct = {
+            id: 'prod-' + Date.now(),
+            name: prodName,
+            rate: prodRate
+        };
+
+        savedProducts.unshift(newProduct);
+        localStorage.setItem('invoicifly_products', JSON.stringify(savedProducts));
+        
+        inventoryForm.reset();
+        renderInventoryList();
+        showToast("Product added to catalog!");
+    });
+
+    function renderInventoryList() {
+        inventoryListContainer.innerHTML = '';
+        if (savedProducts.length === 0) {
+            inventoryListContainer.innerHTML = `<p class="empty-state-text">No products saved yet. Add products above to build your inventory catalog!</p>`;
+            return;
+        }
+
+        savedProducts.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'crm-card';
+            card.innerHTML = `
+                <div class="crm-card-info">
+                    <h4>${product.name}</h4>
+                    <p>Default Rate: ${formatCurrency(product.rate)}</p>
+                </div>
+                <div class="crm-card-actions">
+                    <button class="btn btn-secondary btn-xs select-product-btn" data-id="${product.id}">Use</button>
+                    <button class="btn btn-secondary btn-xs delete-product-btn" data-id="${product.id}" style="color: var(--color-danger); border-color: rgba(239, 68, 68, 0.1);">Delete</button>
+                </div>
+            `;
+            inventoryListContainer.appendChild(card);
+        });
+
+        // Add action listeners
+        document.querySelectorAll('.select-product-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                applyProductToActiveRow(id);
+            });
+        });
+
+        document.querySelectorAll('.delete-product-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                deleteProduct(id);
+            });
+        });
+    }
+
+    function deleteProduct(productId) {
+        if (confirm("Are you sure you want to delete this product from the catalog?")) {
+            savedProducts = savedProducts.filter(p => p.id !== productId);
+            localStorage.setItem('invoicifly_products', JSON.stringify(savedProducts));
+            renderInventoryList();
+            showToast("Product deleted from catalog.", "error");
+        }
+    }
+
+    function applyProductToActiveRow(productId) {
+        const product = savedProducts.find(p => p.id === productId);
+        if (!product) return;
+        
+        // Add as a new line item (or populate empty/first item if it's default)
+        const hasSingleDefaultEmpty = invoiceItems.length === 1 && invoiceItems[0].description.trim() === '' && invoiceItems[0].rate === 0;
+        
+        if (hasSingleDefaultEmpty) {
+            invoiceItems[0].description = product.name;
+            invoiceItems[0].rate = product.rate;
+        } else {
+            invoiceItems.push({
+                id: Date.now(),
+                description: product.name,
+                qty: 1,
+                rate: product.rate
+            });
+        }
+        
+        renderItemsEditor();
+        calculateInvoice();
+        showToast(`Product "${product.name}" added to invoice!`);
+        
+        // Switch tab to Builder
+        tabButtons.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+        const builderTabBtn = document.querySelector('.tab-btn[data-tab="builder"]');
+        if (builderTabBtn) builderTabBtn.classList.add('active');
+        const builderTabPane = document.getElementById('builderTab');
+        if (builderTabPane) builderTabPane.classList.add('active');
+    }
+
     // -------------------------------------------------------------
     // MODAL SYSTEM FOR LOAD CLIENTS
     // -------------------------------------------------------------

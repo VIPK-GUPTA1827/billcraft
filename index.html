@@ -12,6 +12,7 @@
     
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <meta name="theme-color" content="#070913">
     <script>
         if ('serviceWorker' in navigator) {
@@ -158,30 +159,30 @@
                         <div class="panel-section">
                             <div class="section-title-action">
                                 <h3>🏢 Business Details (You)</h3>
-                                <button type="button" id="unlockBusinessBtn" class="btn btn-secondary btn-xs" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                <button type="button" id="unlockBusinessBtn" class="btn btn-secondary btn-xs btn-unlock-business">
                                     🔒 Locked (Click to Edit)
                                 </button>
                             </div>
                             <div class="form-grid">
                                 <div class="form-group col-span-2">
                                     <label for="senderName">Company Name / Your Name</label>
-                                    <input type="text" id="senderName" value="Apex Digital Studio" placeholder="e.g. Acme Corp" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                    <input type="text" id="senderName" value="Apex Digital Studio" placeholder="e.g. Acme Corp" readonly class="input-readonly">
                                 </div>
                                 <div class="form-group">
                                     <label for="senderEmail">Email Address</label>
-                                    <input type="email" id="senderEmail" value="hello@apexdigital.com" placeholder="e.g. contact@acme.com" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                    <input type="email" id="senderEmail" value="hello@apexdigital.com" placeholder="e.g. contact@acme.com" readonly class="input-readonly">
                                 </div>
                                 <div class="form-group">
                                     <label for="senderPhone">Phone Number</label>
-                                    <input type="text" id="senderPhone" value="+91 98765 43210" placeholder="e.g. +91 99999 88888" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                    <input type="text" id="senderPhone" value="+91 98765 43210" placeholder="e.g. +91 99999 88888" readonly class="input-readonly">
                                 </div>
                                 <div class="form-group col-span-2">
                                     <label for="senderAddress">Address</label>
-                                    <textarea id="senderAddress" rows="2" placeholder="e.g. 101, Business Park, Mumbai" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">404 Creative Tower, Bandra West, Mumbai, MH - 400050</textarea>
+                                    <textarea id="senderAddress" rows="2" placeholder="e.g. 101, Business Park, Mumbai" readonly class="input-readonly">404 Creative Tower, Bandra West, Mumbai, MH - 400050</textarea>
                                 </div>
                                 <div class="form-group col-span-2">
                                     <label for="senderSignature">Digital Signature Text (Leave blank for physical sign)</label>
-                                    <input type="text" id="senderSignature" value="Apex Digital Studio" placeholder="e.g. Your Name or Company" readonly style="background: rgba(255, 255, 255, 0.03); cursor: not-allowed;">
+                                    <input type="text" id="senderSignature" value="Apex Digital Studio" placeholder="e.g. Your Name or Company" readonly class="input-readonly">
                                 </div>
                             </div>
                         </div>
@@ -293,26 +294,26 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</textarea>
                         </div>
 
                         <!-- Customer Credit Ledger (Khata Book) -->
-                        <div class="panel-section" id="crmLedgerSection" style="display: none; margin-top: 24px;">
+                        <div class="panel-section crm-ledger-section" id="crmLedgerSection">
                             <div class="section-title-action">
                                 <h3>📖 Credit Ledger: <span id="ledgerClientName">---</span></h3>
-                                <button type="button" id="closeLedgerBtn" class="btn btn-secondary btn-xs" style="background: rgba(255, 255, 255, 0.05);">✕ Close</button>
+                                <button type="button" id="closeLedgerBtn" class="btn btn-secondary btn-xs btn-close-ledger">✕ Close</button>
                             </div>
                             
-                            <div class="kpi-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                                <div class="kpi-card" style="padding: 12px;">
-                                    <div class="kpi-label" style="font-size: 10px;">Outstanding Debt</div>
-                                    <div class="kpi-value" id="ledgerOutstandingBalance" style="font-size: 18px; color: var(--color-danger);">₹0.00</div>
+                            <div class="kpi-grid kpi-grid-ledger">
+                                <div class="kpi-card kpi-card-compact">
+                                    <div class="kpi-label kpi-label-xs">Outstanding Debt</div>
+                                    <div class="kpi-value kpi-value-danger" id="ledgerOutstandingBalance">₹0.00</div>
                                 </div>
-                                <div class="kpi-card" style="padding: 12px;">
-                                    <div class="kpi-label" style="font-size: 10px;">Total Billed</div>
-                                    <div class="kpi-value" id="ledgerTotalBilled" style="font-size: 18px; color: var(--text-main);">₹0.00</div>
+                                <div class="kpi-card kpi-card-compact">
+                                    <div class="kpi-label kpi-label-xs">Total Billed</div>
+                                    <div class="kpi-value kpi-value-normal" id="ledgerTotalBilled">₹0.00</div>
                                 </div>
                             </div>
                             
-                            <h4 style="font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; letter-spacing: 0.5px;">Transaction History</h4>
-                            <div class="history-table-container" style="max-height: 250px; overflow-y: auto;">
-                                <table class="history-table" style="font-size: 12px;">
+                            <h4 class="history-heading">Transaction History</h4>
+                            <div class="history-table-container history-table-compact">
+                                <table class="history-table history-table-sm">
                                     <thead>
                                         <tr>
                                             <th>Invoice #</th>
@@ -356,21 +357,21 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</textarea>
                         </div>
 
                         <!-- Data Security / Backup Section -->
-                        <div class="panel-section dashboard-backup-section" style="margin-top: 24px;">
+                        <div class="panel-section dashboard-backup-section">
                             <h3>💾 Data Backup & Recovery</h3>
-                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; text-align: left;">
+                            <p class="backup-desc">
                                 Keep your business data safe! Export all invoice records and customer data to a secure backup file, or restore it in a single click.
                             </p>
-                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                <button type="button" id="exportBackupBtn" class="btn btn-secondary" style="flex: 1; min-width: 140px;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <div class="flex-wrap-container">
+                                <button type="button" id="exportBackupBtn" class="btn btn-secondary btn-backup-action">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-btn-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                     Download Backup
                                 </button>
-                                <button type="button" id="importBackupBtn" class="btn btn-primary" style="flex: 1; min-width: 140px;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                <button type="button" id="importBackupBtn" class="btn btn-primary btn-backup-action">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-btn-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                                     Upload Backup
                                 </button>
-                                <input type="file" id="backupFileInput" accept=".json" style="display: none;">
+                                <input type="file" id="backupFileInput" accept=".json" class="hidden-file-input">
                             </div>
                         </div>
 
@@ -556,17 +557,17 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</p>
 
     <!-- Admin PIN Prompt Modal -->
     <div id="pinModal" class="modal no-print">
-        <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-content modal-content-sm">
             <div class="modal-header">
                 <h2>🔐 Admin Verification</h2>
                 <button id="closePinModalBtn" class="close-btn">&times;</button>
             </div>
-            <div style="padding: 24px;">
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">Enter Admin PIN to unlock business details for editing:</p>
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <input type="password" id="pinInput" style="text-align: center; font-size: 20px; letter-spacing: 8px; font-weight: 700; width: 100%;" placeholder="••••" maxlength="4">
+            <div class="pin-modal-body">
+                <p class="pin-modal-desc">Enter Admin PIN to unlock business details for editing:</p>
+                <div class="form-group form-group-mb">
+                    <input type="password" id="pinInput" class="pin-input-field" placeholder="••••" maxlength="4">
                 </div>
-                <div id="pinErrorMessage" style="color: var(--color-danger); font-size: 12px; margin-bottom: 16px; text-align: center; display: none; font-weight: 600;">
+                <div id="pinErrorMessage" class="pin-error-msg">
                     ❌ Incorrect Admin PIN! Access denied.
                 </div>
                 <button type="button" id="submitPinBtn" class="btn btn-primary btn-full-width">Verify PIN</button>

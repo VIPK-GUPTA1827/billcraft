@@ -1601,14 +1601,14 @@ body {
  * CLEANUP STYLES (ELIMINATING INLINE CSS)
  * ------------------------------------------------------------- */
 .btn-unlock-business {
-    background: rgba(239, 68, 68, 0.1) !important;
-    color: #ef4444 !important;
-    border: 1px solid rgba(239, 68, 68, 0.2) !important;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .input-readonly {
-    background: rgba(255, 255, 255, 0.03) !important;
-    cursor: not-allowed !important;
+    background: rgba(255, 255, 255, 0.03);
+    cursor: not-allowed;
 }
 
 .crm-ledger-section {

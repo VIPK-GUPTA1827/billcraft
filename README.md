@@ -36,6 +36,7 @@ InvoiciFly is a high-fidelity billing application designed to solve real-world i
 To run this application locally:
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/VIPK-GUPTA1827/billcraft.git
    cd billcraft

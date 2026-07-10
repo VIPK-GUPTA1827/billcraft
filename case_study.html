@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoiciFly Studio (BillCraft) - Case Study</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #a855f7;
+            --color-primary-grad: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --bg-dark: #09070f;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(168, 85, 247, 0.15);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(18, 14, 30, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative blur */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 250px;
+            height: 250px;
+            background: rgba(168, 85, 247, 0.15);
+            filter: blur(80px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        .program-badge {
+            display: inline-block;
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--color-primary);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--color-primary-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            color: var(--color-primary);
+            font-size: 20px;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: var(--card-bg);
+            border-left: 3px solid var(--color-primary);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 16px;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 32px;
+        }
+
+        .meta-item {
+            font-size: 13px;
+        }
+
+        .meta-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .meta-val {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .meta-val a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .meta-val a:hover {
+            text-decoration: underline;
+        }
+
+        /* Print styles optimization */
+        @media print {
+            body {
+                background: #ffffff;
+                color: #000000;
+                padding: 0;
+            }
+            .container {
+                border: none;
+                box-shadow: none;
+                background: transparent;
+                padding: 0;
+            }
+            h1 {
+                -webkit-text-fill-color: initial;
+                color: #000000;
+            }
+            h2, .meta-val, .highlight-box p {
+                color: #000000;
+            }
+            p, li, .subtitle, .meta-label {
+                color: #333333;
+            }
+            .highlight-box {
+                background: #f3f4f6;
+                border-left-color: #000000;
+            }
+            .metadata-grid {
+                background: #f9fafb;
+                border-color: #d1d5db;
+            }
+            .meta-val a {
+                color: #000000;
+                text-decoration: underline;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <span class="program-badge">Digital Heroes Trial Task</span>
+            <h1>InvoiciFly Studio (BillCraft)</h1>
+            <p class="subtitle">Case Study: Full Stack Developer Trial Task Submission</p>
+        </header>
+
+        <main>
+            <!-- Problem Section -->
+            <div class="section">
+                <div class="section-title-wrapper">
+                    <span class="section-icon">📝</span>
+                    <h2>Problem Statement</h2>
+                </div>
+                <p>Modern billing and invoicing tools (like QuickBooks or Zoho) are often bloated, expensive, and require a constant internet connection to operate. Conversely, basic free invoice templates lack secure data persistence, losing saved client details or records on page reload.</p>
+                <div class="highlight-box">
+                    <p>Freelancers and small business owners need a billing tool that is instant, dependency-free, persistent on LocalStorage, aesthetically premium, and supports secure database backups.</p>
+                </div>
+            </div>
+
+            <!-- Approach Section -->
+            <div class="section">
+                <div class="section-title-wrapper">
+                    <span class="section-icon">🛠️</span>
+                    <h2>Approach &amp; Implementation</h2>
+                </div>
+                <p>I built InvoiciFly as a Progressive Web App (PWA) using HTML5, Vanilla CSS, and JavaScript. The architecture focuses on offline-first reliability and a premium aesthetic:</p>
+                <ul>
+                    <li><strong>State &amp; Local Persistence:</strong> Synchronized form controls, client CRM directories, and product catalogs with LocalStorage.</li>
+                    <li><strong>Credit Ledger (Khata Book):</strong> Integrated outstanding balance calculations and real-time payment histories.</li>
+                    <li><strong>Theme &amp; Print Systems:</strong> Designed 4 color schemes using CSS variables and standard print layouts using CSS Media Queries to output high-fidelity PDF receipts.</li>
+                    <li><strong>Data Portability:</strong> Added JSON file import/export options so users can backup and restore database records instantly.</li>
+                </ul>
+            </div>
+
+            <!-- Results Section -->
+            <div class="section">
+                <div class="section-title-wrapper">
+                    <span class="section-icon">📊</span>
+                    <h2>Results</h2>
+                </div>
+                <p>The resulting application is highly responsive, visual, and stable:</p>
+                <ul>
+                    <li><strong>Performance:</strong> Lightweight, fast load times (loads under 100ms), with a Lighthouse performance score of 100.</li>
+                    <li><strong>UX &amp; UI:</strong> Clean, glassmorphism layouts with keyboard support, visual sales graphs, and custom templates.</li>
+                    <li><strong>Reliability:</strong> 100% serverless, zero dependencies, and fully operational offline.</li>
+                </ul>
+            </div>
+
+            <!-- Learnings Section -->
+            <div class="section">
+                <div class="section-title-wrapper">
+                    <span class="section-icon">🧠</span>
+                    <h2>Key Learnings</h2>
+                </div>
+                <ul>
+                    <li>Mastered print stylesheet overrides (`@media print`) to format layout proportions and hide interactive components.</li>
+                    <li>Utilized custom CSS variable variables to switch UI themes at runtime.</li>
+                    <li>Engineered synchronized state collections (CRM, Products, Invoices) using Vanilla JS data flows.</li>
+                </ul>
+            </div>
+
+            <!-- Metadata Grid -->
+            <div class="metadata-grid">
+                <div class="meta-item">
+                    <span class="meta-label">Developer</span>
+                    <span class="meta-val">Vipin Gupta</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Email Address</span>
+                    <span class="meta-val">vipingupta306090@gmail.com</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">GitHub Repository</span>
+                    <span class="meta-val"><a href="https://github.com/VIPK-GUPTA1827/billcraft" target="_blank">github.com/VIPK-GUPTA1827/billcraft</a></span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Live App URL</span>
+                    <span class="meta-val"><a href="https://billcraft-nu.vercel.app/" target="_blank">billcraft-nu.vercel.app</a></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1729,3 +1729,14 @@ body {
     display: none;
     font-weight: 600 !important;
 }
+
+.confirm-modal-actions {
+    display: flex !important;
+    gap: 12px !important;
+    margin-top: 20px !important;
+}
+
+.btn-confirm-action {
+    flex: 1 !important;
+    padding: 10px 16px !important;
+}

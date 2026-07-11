@@ -575,6 +575,23 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</p>
         </div>
     </div>
 
+    <!-- Custom Confirm Modal -->
+    <div id="confirmModal" class="modal no-print">
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2 id="confirmModalTitle">⚠️ Confirm Action</h2>
+                <button id="closeConfirmModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="pin-modal-body">
+                <p id="confirmModalMessage" class="pin-modal-desc"></p>
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="button" id="cancelConfirmBtn" class="btn btn-secondary" style="flex: 1; padding: 10px 16px;">Cancel</button>
+                    <button type="button" id="okConfirmBtn" class="btn btn-primary" style="flex: 1; padding: 10px 16px;">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js?v=1.0.2"></script>
 </body>
 </html>

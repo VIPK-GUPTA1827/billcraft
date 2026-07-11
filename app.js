@@ -286,6 +286,52 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === pinModal) {
             pinModal.classList.remove('active');
         }
+        if (e.target === confirmModal) {
+            closeConfirm();
+        }
+    });
+
+    // -------------------------------------------------------------
+    // CUSTOM CONFIRM MODAL LOGIC
+    // -------------------------------------------------------------
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmModalTitle = document.getElementById('confirmModalTitle');
+    const confirmModalMessage = document.getElementById('confirmModalMessage');
+    const closeConfirmModalBtn = document.getElementById('closeConfirmModalBtn');
+    const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+    const okConfirmBtn = document.getElementById('okConfirmBtn');
+    let confirmCallback = null;
+
+    function showCustomConfirm(title, message, isDanger, callback) {
+        confirmModalTitle.innerHTML = title;
+        confirmModalMessage.innerHTML = message;
+        confirmCallback = callback;
+
+        if (isDanger) {
+            okConfirmBtn.style.background = '#ef4444';
+            okConfirmBtn.style.borderColor = '#ef4444';
+            okConfirmBtn.textContent = 'Delete';
+        } else {
+            okConfirmBtn.style.background = 'var(--color-primary)';
+            okConfirmBtn.style.borderColor = 'var(--color-primary)';
+            okConfirmBtn.textContent = 'Confirm';
+        }
+
+        confirmModal.classList.add('active');
+    }
+
+    function closeConfirm() {
+        confirmModal.classList.remove('active');
+        confirmCallback = null;
+    }
+
+    closeConfirmModalBtn.addEventListener('click', closeConfirm);
+    cancelConfirmBtn.addEventListener('click', closeConfirm);
+    okConfirmBtn.addEventListener('click', () => {
+        if (confirmCallback) {
+            confirmCallback();
+        }
+        closeConfirm();
     });
 
     // -------------------------------------------------------------
@@ -794,7 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteClient(clientId) {
-        if (confirm("Are you sure you want to delete this client from CRM?")) {
+        showCustomConfirm("🗑️ Delete Client", "Are you sure you want to delete this client from CRM?", true, () => {
             savedClients = savedClients.filter(c => c.id !== clientId);
             localStorage.setItem('invoicifly_clients', JSON.stringify(savedClients));
             
@@ -805,7 +851,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             renderCrmList();
-        }
+        });
     }
 
     // Customer Credit Ledger (Khata Book) Systems
@@ -960,12 +1006,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteProduct(productId) {
-        if (confirm("Are you sure you want to delete this product from the catalog?")) {
+        showCustomConfirm("🗑️ Delete Product", "Are you sure you want to delete this product from the catalog?", true, () => {
             savedProducts = savedProducts.filter(p => p.id !== productId);
             localStorage.setItem('invoicifly_products', JSON.stringify(savedProducts));
             renderInventoryList();
             showToast("Product deleted from catalog.", "error");
-        }
+        });
     }
 
     function applyProductToActiveRow(productId) {
@@ -1450,7 +1496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if invoice # already exists to allow update
         const existingIdx = savedInvoices.findIndex(inv => inv.invNumber === invNumber);
         if (existingIdx !== -1) {
-            if (confirm(`Invoice number "${invNumber}" already exists in history. Overwrite?`)) {
+            showCustomConfirm("⚠️ Overwrite Invoice", `Invoice number "${invNumber}" already exists in history. Overwrite?`, false, () => {
                 // Keep the existing status when overwriting
                 invoiceRecord.status = savedInvoices[existingIdx].status;
                 invoiceRecord.id = savedInvoices[existingIdx].id;
@@ -1458,7 +1504,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('invoicifly_invoices', JSON.stringify(savedInvoices));
                 showToast(`Invoice ${invNumber} updated in history!`);
                 renderDashboard();
-            }
+            });
             return;
         }
 
@@ -1575,12 +1621,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const inv = savedInvoices.find(i => i.id === id);
         if (!inv) return;
 
-        if (confirm(`Are you sure you want to delete invoice ${inv.invNumber} from history?`)) {
+        showCustomConfirm("🗑️ Delete Invoice", `Are you sure you want to delete invoice ${inv.invNumber} from history?`, true, () => {
             savedInvoices = savedInvoices.filter(i => i.id !== id);
             localStorage.setItem('invoicifly_invoices', JSON.stringify(savedInvoices));
             showToast(`Invoice deleted successfully.`, 'error');
             renderDashboard();
-        }
+        });
     }
 
     // Initial Dashboard stats rendering on load

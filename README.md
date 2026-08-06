@@ -1,50 +1,42 @@
-# InvoiciFly Studio (BillCraft)
+# InvoiciFly Studio (BillCraft) ⚡
 
-> A premium, offline-first invoice builder & client CRM manager built for modern freelancers and small business owners.
+> A premium, offline-first client CRM & invoice builder designed for modern freelancers and contractors. Built with zero external backend dependencies using high-fidelity Vanilla JS and dynamic CSS styling.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen.svg)](https://billcraft-nu.vercel.app/)
 
-InvoiciFly is a high-fidelity billing application designed to solve real-world invoicing struggles. It enables users to create professional invoices, manage client relationships (CRM), monitor payment history, track customer credit ledgers (Khata Book), and download beautiful print-ready PDF receipts in a single click.
+InvoiciFly is a high-fidelity client CRM and billing manager. It demonstrates how to build robust, offline-first applications leveraging modern web APIs. It includes custom state management, dynamic stylesheet swapping, and offline synchronization features.
 
 ---
 
-## ✨ Features
+## 🚀 Key Engineering Implementations
 
-- **🎨 Multi-Theme Support**: Choose from curated color schemes like *Midnight Nebula*, *Emerald Mint*, *Royal Gold*, and *Arctic Minimal*.
-- **📐 Layout Styles**: Swap print layouts instantly between *Modern Creative*, *Corporate Classic*, and *Minimalist Elegant*.
-- **👤 Clients CRM**: Save client addresses and contact info to a local CRM catalog for instant auto-complete and selection during invoice generation.
-- **📖 Credit Ledger (Khata Book)**: Keep track of outstanding balances, payments, and invoice histories per client.
-- **📈 Analytics Dashboard**: Visualize financial progress with cards showing total earnings, pending invoices, and a gorgeous growth chart powered by Chart.js.
-- **💾 Secure Backup & Restore**: Export all app records (CRM, products, invoices) to a secure JSON file and restore it on any device.
-- **⚡ Offline-First (PWA)**: Installed as a Progressive Web App (PWA) with offline support via service workers.
+Unlike basic invoice generators, InvoiciFly implements several advanced frontend engineering patterns:
+
+### 1. Dynamic Layout & Theme Engine (CSS Custom Properties)
+- Implements a declarative state-driven theme system. Swapping themes (`Midnight Nebula`, `Emerald Mint`, `Royal Gold`, `Arctic Minimal`) instantly updates global CSS custom properties with zero repaint lag.
+- Swaps printable design systems dynamically between **Modern Creative**, **Corporate Classic**, and **Minimalist Elegant** by changing high-level class namespaces on the DOM container.
+
+### 2. Custom Offline State Management & Khata Book
+- Implements a transaction-safe local state manager synced to `localStorage`.
+- Features a Customer Credit Ledger (Khata Book) calculating real-time running balances, transaction history logs, and instant financial reports powered by **Chart.js**.
+
+### 3. Print Layout Engine (Pixel-Perfect A4 Vector PDFs)
+- Employs dedicated CSS media query overrides (`@media print`) ensuring vector-clear document layouts.
+- Prevents page breaks inside table rows (`page-break-inside: avoid`) and suppresses non-printable UI panels, delivering standard A4 sheets without layout shifts.
+
+### 4. PWA (Progressive Web App) Architecture
+- Fully installable offline app using a customized `service-worker.js` cache-first strategies for static assets (HTML, CSS, JS, Fonts).
+- Custom responsive layouts adapting fluidly from mobile screens to ultrawide desktop monitors.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Technical Stack
 
-- **Frontend**: Semantic HTML5, CSS Variables, ES6 JavaScript.
-- **Charts**: Chart.js (via CDN).
-- **Icons & Fonts**: Google Fonts (Plus Jakarta Sans & Outfit), SVG custom paths.
-- **Database / Persistence**: Browser LocalStorage & JSON backup streams.
-- **Hosting**: Deployed on Vercel.
-
----
-
-## 🚀 Quick Start
-
-To run this application locally:
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/VIPK-GUPTA1827/billcraft.git
-   cd billcraft
-   ```
-
-2. Open the application:
-   - Simply open `index.html` in any web browser.
-   - Or, run a local development server (e.g. using VS Code's Live Server extension).
+- **Core Engine:** Semantic HTML5, CSS variables, ES6 Class-based JS.
+- **Data Visualization:** Chart.js (Modular CDN execution).
+- **Offline Sync:** Web Service Workers, Cache Storage API, and Web Manifest schemas.
+- **Export Formats:** JSON backup streams, Native Print-to-PDF drivers.
 
 ---
 
@@ -64,10 +56,24 @@ billcraft/
 
 ---
 
+## ⚙️ Running Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/VIPK-GUPTA1827/billcraft.git
+   cd billcraft
+   ```
+
+2. **Start a local development server:**
+   You can run it with any static server. For example:
+   ```bash
+   npx serve .
+   ```
+   Or open `index.html` directly in your browser.
+
+---
+
 ## 🛡️ License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-*Built with passion as part of the **Digital Heroes** Developer Program.*

@@ -1405,7 +1405,6 @@ body {
         white-space: nowrap !important;
         display: flex !important;
         flex-wrap: nowrap !important;
-        scrollbar-width: none; /* Hide scrollbar for Firefox */
     }
 
     .tabs-header::-webkit-scrollbar {

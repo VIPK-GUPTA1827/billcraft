@@ -197,9 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // -------------------------------------------------------------
-    // SECRET ADMIN PIN LOCK LOGIC (Default: 1234)
+    // SECRET ADMIN PIN LOCK LOGIC (Default: 9833)
     // -------------------------------------------------------------
-    const adminPIN = "1234";
+    const adminPIN = "9833";
     const senderInputs = [senderNameInput, senderEmailInput, senderPhoneInput, senderAddressInput, senderSignatureInput];
     
     // PIN Modal Elements

@@ -1740,3 +1740,390 @@ body {
     flex: 1 !important;
     padding: 10px 16px !important;
 }
+
+/* -------------------------------------------------------------
+ * APP FOOTER CREDITS
+ * ------------------------------------------------------------- */
+.app-footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--theme-border);
+    margin-top: 12px;
+}
+
+.footer-author-name {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* -------------------------------------------------------------
+ * PREMIUM FEATURE UPGRADES: LOGO, UPI, SIGNATURE PAD STYLES
+ * ------------------------------------------------------------- */
+
+/* Logo Upload Container & Input */
+.logo-upload-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.logo-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border: 2px dashed var(--theme-border);
+    border-radius: 8px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.15);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logo-upload-label:hover {
+    border-color: var(--theme-border-active);
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.hidden-file-input {
+    display: none !important;
+}
+
+/* Invoice Preview Logo */
+.invoice-logo-container {
+    max-height: 70px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.invoice-logo-img {
+    max-height: 70px;
+    max-width: 180px;
+    object-fit: contain;
+}
+
+/* Invoice Preview Bank & UPI Layout */
+.footer-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.footer-right-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.invoice-payment-details {
+    background: white;
+    border: 1px solid var(--invoice-border-light);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    font-size: 11px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.bank-details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin-top: 6px;
+    color: var(--invoice-text-dark);
+}
+
+.detail-label {
+    font-weight: 700;
+    color: var(--invoice-text-gray);
+}
+
+/* UPI QR Container */
+.upi-qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1px solid var(--invoice-border-light);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.upi-qr-img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+
+.upi-qr-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--invoice-text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Signature Wrapper and Image */
+.signature-wrapper {
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.signature-drawn-img {
+    height: 45px;
+    max-width: 140px;
+    object-fit: contain;
+    filter: contrast(1.5) multiply(1); /* Enhance ink contrast */
+}
+
+
+/* Utilities to avoid inline styles */
+.hidden-element {
+    display: none !important;
+}
+
+.mt-12 {
+    margin-top: 12px !important;
+}
+
+/* Floating Mobile Preview Toggle Button */
+.mobile-preview-toggle {
+    display: none;
+}
+
+@media (max-width: 1150px) {
+    .mobile-preview-toggle {
+        display: flex;
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1500;
+        background: var(--invoice-accent-grad);
+        color: #ffffff;
+        padding: 12px 24px;
+        border-radius: 30px;
+        box-shadow: 0 10px 25px var(--color-primary-glow);
+        font-weight: 700;
+        font-size: 14px;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        outline: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .mobile-preview-toggle:hover {
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 12px 30px var(--color-primary-glow);
+    }
+    
+    .mobile-preview-toggle:active {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    /* By default, hide preview-panel and show control-panel on mobile screen viewports */
+    .workspace-grid .preview-panel {
+        display: none !important;
+    }
+    .workspace-grid .control-panel {
+        display: block !important;
+    }
+
+    /* When preview mode is active, swap display status */
+    .workspace-grid.show-preview-active .preview-panel {
+        display: block !important;
+        width: 100% !important;
+    }
+    .workspace-grid.show-preview-active .control-panel {
+        display: none !important;
+    }
+}
+
+/* Upgraded App Footer System */
+.app-footer {
+    background: var(--theme-panel-bg);
+    border: 1px solid var(--theme-border);
+    border-radius: 16px;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow-premium);
+    margin-top: 10px;
+    transition: background 0.4s ease, border 0.4s ease;
+}
+
+.footer-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    border-bottom: 1px solid var(--theme-border);
+    padding-bottom: 20px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--invoice-accent-grad);
+    color: var(--text-inverse);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px var(--color-primary-glow);
+}
+
+.footer-brand h4 {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.footer-brand p {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.footer-link-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-link-btn:hover {
+    color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.footer-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.footer-author-name {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Modals Custom list & text styling */
+.text-left {
+    text-align: left !important;
+}
+
+.mb-12 {
+    margin-bottom: 12px !important;
+}
+
+.modal-info-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-info-list li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-main);
+}
+
+.modal-info-list li::before {
+    content: "•";
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 18px;
+    position: absolute;
+    left: 4px;
+    top: -2px;
+}
+
+.feedback-textarea-field {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--theme-border);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 13px;
+    outline: none;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.feedback-textarea-field:focus {
+    border-color: var(--theme-border-active);
+    box-shadow: 0 0 8px var(--color-primary-glow);
+}
+
+@media (max-width: 768px) {
+    .footer-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    
+    .footer-bottom-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

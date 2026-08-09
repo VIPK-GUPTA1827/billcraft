@@ -48,12 +48,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const invDueInput = document.getElementById('invDue');
     
     const senderNameInput = document.getElementById('senderName');
+    const logoInput = document.getElementById('logoInput');
+    const logoLabel = document.getElementById('logoLabel');
+    const removeLogoBtn = document.getElementById('removeLogoBtn');
     const senderEmailInput = document.getElementById('senderEmail');
     const senderPhoneInput = document.getElementById('senderPhone');
     const senderAddressInput = document.getElementById('senderAddress');
     const senderSignatureInput = document.getElementById('senderSignature');
     const unlockBusinessBtn = document.getElementById('unlockBusinessBtn');
-    
+    const mobilePreviewToggleBtn = document.getElementById('mobilePreviewToggleBtn');
+
+
+    // Bank & UPI elements
+    const bankNameInput = document.getElementById('bankName');
+    const bankHolderInput = document.getElementById('bankHolder');
+    const bankAccNoInput = document.getElementById('bankAccNo');
+    const bankIfscInput = document.getElementById('bankIfsc');
+    const bankUpiInput = document.getElementById('bankUpi');
+
     const clientNameInput = document.getElementById('clientName');
     const clientEmailInput = document.getElementById('clientEmail');
     const clientPhoneInput = document.getElementById('clientPhone');
@@ -73,6 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevSenderPhone = document.getElementById('prevSenderPhone');
     const prevSenderAddress = document.getElementById('prevSenderAddress');
     const prevSignatureText = document.getElementById('prevSignatureText');
+
+    
+    const prevLogoContainer = document.getElementById('prevLogoContainer');
+    const prevLogoImage = document.getElementById('prevLogoImage');
+    
+    const prevPaymentDetailsContainer = document.getElementById('prevPaymentDetailsContainer');
+    const prevBankName = document.getElementById('prevBankName');
+    const prevBankHolder = document.getElementById('prevBankHolder');
+    const prevBankAccNo = document.getElementById('prevBankAccNo');
+    const prevBankIfsc = document.getElementById('prevBankIfsc');
+    
+    const prevUpiQrContainer = document.getElementById('prevUpiQrContainer');
+    const prevUpiQrImage = document.getElementById('prevUpiQrImage');
     
     const prevInvNumber = document.getElementById('prevInvNumber');
     const prevInvDate = document.getElementById('prevInvDate');
@@ -111,6 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
+    // Disable native browser autocomplete dropdowns and spellcheck tooltips globally
+    document.querySelectorAll('input, textarea').forEach(el => {
+        el.setAttribute('autocomplete', 'off');
+        el.setAttribute('spellcheck', 'false');
+    });
+
     // -------------------------------------------------------------
     // INITIALIZATION & DATES
     // -------------------------------------------------------------
@@ -136,6 +167,18 @@ document.addEventListener('DOMContentLoaded', () => {
         prevInvDue.textContent = dueDateString;
     }
 
+    function updateUpiQrCode(upiId) {
+        if (!upiId) {
+            prevUpiQrContainer.classList.add('hidden-element');
+            return;
+        }
+        const senderName = senderNameInput.value || 'Business';
+        const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(senderName)}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
+        prevUpiQrImage.src = qrUrl;
+        prevUpiQrContainer.classList.remove('hidden-element');
+    }
+
     function loadBusinessProfile() {
         const profile = JSON.parse(localStorage.getItem('invoicifly_business_profile'));
         if (profile) {
@@ -154,9 +197,45 @@ document.addEventListener('DOMContentLoaded', () => {
             senderSignatureInput.value = profile.signature || '';
             prevSignatureText.textContent = profile.signature || '';
             if ((profile.signature || '').trim() === '') {
-                prevSignatureText.style.display = 'none';
+                prevSignatureText.classList.add('hidden-element');
             } else {
-                prevSignatureText.style.display = 'inline-block';
+                prevSignatureText.classList.remove('hidden-element');
+            }
+
+            // Load logo
+            if (profile.logo) {
+                prevLogoImage.src = profile.logo;
+                prevLogoContainer.classList.remove('hidden-element');
+                logoLabel.innerHTML = '✨ Logo Uploaded';
+                removeLogoBtn.classList.remove('hidden-element');
+            } else {
+                prevLogoContainer.classList.add('hidden-element');
+                logoLabel.innerHTML = '📁 Click to Upload Logo';
+                removeLogoBtn.classList.add('hidden-element');
+            }
+
+
+
+            // Load Bank Details
+            bankNameInput.value = profile.bankName || '';
+            prevBankName.textContent = profile.bankName || '---';
+
+            bankHolderInput.value = profile.bankHolder || '';
+            prevBankHolder.textContent = profile.bankHolder || '---';
+
+            bankAccNoInput.value = profile.bankAccNo || '';
+            prevBankAccNo.textContent = profile.bankAccNo || '---';
+
+            bankIfscInput.value = profile.bankIfsc || '';
+            prevBankIfsc.textContent = profile.bankIfsc || '---';
+
+            bankUpiInput.value = profile.bankUpi || '';
+            updateUpiQrCode(profile.bankUpi || '');
+
+            if (profile.bankName || profile.bankHolder || profile.bankAccNo || profile.bankIfsc) {
+                prevPaymentDetailsContainer.classList.remove('hidden-element');
+            } else {
+                prevPaymentDetailsContainer.classList.add('hidden-element');
             }
         }
     }
@@ -182,6 +261,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetTab === 'dashboard') {
                 renderDashboard();
             }
+
+            // Hide/Show floating button on tab changes (only show on builder tab)
+            if (mobilePreviewToggleBtn) {
+                if (targetTab === 'builder') {
+                    mobilePreviewToggleBtn.classList.remove('hidden-element');
+                } else {
+                    mobilePreviewToggleBtn.classList.add('hidden-element');
+                }
+            }
         });
     });
 
@@ -200,7 +288,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // SECRET ADMIN PIN LOCK LOGIC (Default: 9833)
     // -------------------------------------------------------------
     const adminPIN = "9833";
-    const senderInputs = [senderNameInput, senderEmailInput, senderPhoneInput, senderAddressInput, senderSignatureInput];
+    const senderInputs = [
+        senderNameInput, senderEmailInput, senderPhoneInput, senderAddressInput, senderSignatureInput,
+        bankNameInput, bankHolderInput, bankAccNoInput, bankIfscInput, bankUpiInput
+    ];
     
     // PIN Modal Elements
     const pinModal = document.getElementById('pinModal');
@@ -213,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const isLocked = senderNameInput.hasAttribute('readonly');
         
         if (isLocked) {
-            // Open custom PIN modal instead of using browser prompt()
             pinInput.value = '';
             pinErrorMessage.style.display = 'none';
             pinModal.classList.add('active');
@@ -225,25 +315,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.style.background = 'rgba(255, 255, 255, 0.03)';
                 input.style.cursor = 'not-allowed';
             });
+            logoInput.setAttribute('disabled', 'true');
+
             unlockBusinessBtn.innerHTML = "🔒 Locked (Click to Edit)";
             unlockBusinessBtn.style.background = "rgba(239, 68, 68, 0.1)";
             unlockBusinessBtn.style.color = "#ef4444";
             unlockBusinessBtn.style.borderColor = "rgba(239, 68, 68, 0.2)";
 
             // Auto-save business profile to localStorage
+            const existingProfile = JSON.parse(localStorage.getItem('invoicifly_business_profile')) || {};
             const businessProfile = {
+                ...existingProfile,
                 name: senderNameInput.value,
                 email: senderEmailInput.value,
                 phone: senderPhoneInput.value,
                 address: senderAddressInput.value,
-                signature: senderSignatureInput.value
+                signature: senderSignatureInput.value,
+                bankName: bankNameInput.value,
+                bankHolder: bankHolderInput.value,
+                bankAccNo: bankAccNoInput.value,
+                bankIfsc: bankIfscInput.value,
+                bankUpi: bankUpiInput.value
             };
             localStorage.setItem('invoicifly_business_profile', JSON.stringify(businessProfile));
             showToast("Business Profile saved successfully!");
         }
     });
 
-    // Handle PIN Modal Closing
     closePinModalBtn.addEventListener('click', () => {
         pinModal.classList.remove('active');
     });
@@ -257,6 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.style.background = 'transparent';
                 input.style.cursor = 'text';
             });
+            logoInput.removeAttribute('disabled');
+
             unlockBusinessBtn.innerHTML = "🔓 Unlocked (Edit Mode)";
             unlockBusinessBtn.style.background = "rgba(16, 185, 129, 0.1)";
             unlockBusinessBtn.style.color = "#10b981";
@@ -288,6 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (e.target === confirmModal) {
             closeConfirm();
+        }
+        if (e.target === document.getElementById('signModal')) {
+            document.getElementById('signModal').classList.remove('active');
         }
     });
 
@@ -364,6 +467,73 @@ document.addEventListener('DOMContentLoaded', () => {
     syncText(clientEmailInput, prevClientEmail);
     syncText(clientPhoneInput, prevClientPhone);
     syncText(clientAddressInput, prevClientAddress);
+
+    // -------------------------------------------------------------
+    // LOGO UPLOAD & REMOVE LOGIC
+    // -------------------------------------------------------------
+    logoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const base64Data = event.target.result;
+            const profile = JSON.parse(localStorage.getItem('invoicifly_business_profile')) || {};
+            profile.logo = base64Data;
+            localStorage.setItem('invoicifly_business_profile', JSON.stringify(profile));
+
+            prevLogoImage.src = base64Data;
+            prevLogoContainer.classList.remove('hidden-element');
+            logoLabel.innerHTML = '✨ Logo Uploaded';
+            removeLogoBtn.classList.remove('hidden-element');
+            showToast("Company logo saved!");
+        };
+        reader.readAsDataURL(file);
+    });
+
+    removeLogoBtn.addEventListener('click', () => {
+        const profile = JSON.parse(localStorage.getItem('invoicifly_business_profile')) || {};
+        delete profile.logo;
+        localStorage.setItem('invoicifly_business_profile', JSON.stringify(profile));
+
+        logoInput.value = '';
+        prevLogoImage.src = '';
+        prevLogoContainer.classList.add('hidden-element');
+        logoLabel.innerHTML = '📁 Click to Upload Logo';
+        removeLogoBtn.classList.add('hidden-element');
+        showToast("Logo removed.");
+    });
+
+    // -------------------------------------------------------------
+    // BANK DETAILS & UPI INTERACTIVE SYNCS
+    // -------------------------------------------------------------
+    const syncBankDetails = () => {
+        const hasBank = bankNameInput.value || bankHolderInput.value || bankAccNoInput.value || bankIfscInput.value;
+        if (hasBank) {
+            prevPaymentDetailsContainer.classList.remove('hidden-element');
+        } else {
+            prevPaymentDetailsContainer.classList.add('hidden-element');
+        }
+        
+        prevBankName.textContent = bankNameInput.value || '---';
+        prevBankHolder.textContent = bankHolderInput.value || '---';
+        prevBankAccNo.textContent = bankAccNoInput.value || '---';
+        prevBankIfsc.textContent = bankIfscInput.value || '---';
+    };
+
+    bankNameInput.addEventListener('input', syncBankDetails);
+    bankHolderInput.addEventListener('input', syncBankDetails);
+    bankAccNoInput.addEventListener('input', syncBankDetails);
+    bankIfscInput.addEventListener('input', syncBankDetails);
+
+    bankUpiInput.addEventListener('input', () => {
+        updateUpiQrCode(bankUpiInput.value.trim());
+    });
+
+    // -------------------------------------------------------------
+    // INTERACTIVE SIGNATURE DRAWING CANVAS
+    // -------------------------------------------------------------
+
 
     // Client Name Autocomplete
     const clientAutocomplete = document.getElementById('clientAutocomplete');
@@ -1652,6 +1822,91 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.style.removeProperty('--invoice-scale');
         }
     }
+
+    // -------------------------------------------------------------
+    // FLOATING MOBILE PREVIEW TOGGLE CONTROLLER
+    // -------------------------------------------------------------
+    const mobileToggleIcon = document.getElementById('mobileToggleIcon');
+    const mobileToggleText = document.getElementById('mobileToggleText');
+    const workspaceGrid = document.querySelector('.workspace-grid');
+
+    if (mobilePreviewToggleBtn) {
+        mobilePreviewToggleBtn.addEventListener('click', () => {
+            const isPreviewActive = workspaceGrid.classList.toggle('show-preview-active');
+            if (isPreviewActive) {
+                mobileToggleIcon.textContent = '📝';
+                mobileToggleText.textContent = 'Edit Invoice';
+                // Trigger dynamic scale calculation for mobile viewport
+                updateMobileScale();
+            } else {
+                mobileToggleIcon.textContent = '👁️';
+                mobileToggleText.textContent = 'View Preview';
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // POLICY & BRAND UTILITY MODALS CONTROLLERS
+    // -------------------------------------------------------------
+    const openFeedbackBtn = document.getElementById('openFeedbackBtn');
+    const openPrivacyBtn = document.getElementById('openPrivacyBtn');
+    const openTermsBtn = document.getElementById('openTermsBtn');
+    const openAboutBtn = document.getElementById('openAboutBtn');
+    const openSecurityBtn = document.getElementById('openSecurityBtn');
+
+    const feedbackModal = document.getElementById('feedbackModal');
+    const privacyModal = document.getElementById('privacyModal');
+    const termsModal = document.getElementById('termsModal');
+    const aboutModal = document.getElementById('aboutModal');
+    const securityModal = document.getElementById('securityModal');
+
+    const closeFeedbackModalBtn = document.getElementById('closeFeedbackModalBtn');
+    const closePrivacyModalBtn = document.getElementById('closePrivacyModalBtn');
+    const closeTermsModalBtn = document.getElementById('closeTermsModalBtn');
+    const closeAboutModalBtn = document.getElementById('closeAboutModalBtn');
+    const closeSecurityModalBtn = document.getElementById('closeSecurityModalBtn');
+
+    const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+    const feedbackText = document.getElementById('feedbackText');
+
+    // Toggle Modal Helper
+    const bindModalToggle = (btn, modal, closeBtn) => {
+        if (btn && modal && closeBtn) {
+            btn.addEventListener('click', () => modal.classList.add('active'));
+            closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+        }
+    };
+
+    bindModalToggle(openFeedbackBtn, feedbackModal, closeFeedbackModalBtn);
+    bindModalToggle(openPrivacyBtn, privacyModal, closePrivacyModalBtn);
+    bindModalToggle(openTermsBtn, termsModal, closeTermsModalBtn);
+    bindModalToggle(openAboutBtn, aboutModal, closeAboutModalBtn);
+    bindModalToggle(openSecurityBtn, securityModal, closeSecurityModalBtn);
+
+    // Feedback Submission
+    if (submitFeedbackBtn) {
+        submitFeedbackBtn.addEventListener('click', () => {
+            const fbVal = feedbackText.value.trim();
+            if (!fbVal) {
+                showToast("Please write some feedback before submitting!", "error");
+                return;
+            }
+            showToast("Thank you for your valuable feedback!");
+            feedbackText.value = '';
+            feedbackModal.classList.remove('active');
+        });
+    }
+
+    // Global outside click modal closer
+    window.addEventListener('click', (e) => {
+        const modals = ['feedbackModal', 'privacyModal', 'termsModal', 'aboutModal', 'securityModal', 'clientModal', 'pinModal', 'confirmModal'];
+        modals.forEach(id => {
+            const m = document.getElementById(id);
+            if (m && e.target === m) {
+                m.classList.remove('active');
+            }
+        });
+    });
 
     // Run on load and window resize
     updateMobileScale();

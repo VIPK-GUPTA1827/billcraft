@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="midnight">
+<html lang="en" data-theme="midnight" class="notranslate">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=1.0.2">
+    
+    <!-- Disable Google Translation Chrome Popups -->
+    <meta name="google" content="notranslate">
     
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -155,6 +158,16 @@
                                     <label for="senderName">Company Name / Your Name</label>
                                     <input type="text" id="senderName" value="Apex Digital Studio" placeholder="e.g. Acme Corp" readonly class="input-readonly">
                                 </div>
+                                <div class="form-group col-span-2">
+                                    <label for="logoInput">Company Logo (Optional)</label>
+                                    <div class="logo-upload-box">
+                                        <input type="file" id="logoInput" accept="image/*" disabled class="hidden-file-input">
+                                        <label for="logoInput" class="logo-upload-label" id="logoLabel">
+                                            <span>📁 Click to Upload Logo</span>
+                                        </label>
+                                        <button type="button" id="removeLogoBtn" class="btn btn-secondary btn-xs mt-1 hidden-element">Remove Logo</button>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="senderEmail">Email Address</label>
                                     <input type="email" id="senderEmail" value="hello@apexdigital.com" placeholder="e.g. contact@acme.com" readonly class="input-readonly">
@@ -168,8 +181,37 @@
                                     <textarea id="senderAddress" rows="2" placeholder="e.g. 101, Business Park, Mumbai" readonly class="input-readonly">404 Creative Tower, Bandra West, Mumbai, MH - 400050</textarea>
                                 </div>
                                 <div class="form-group col-span-2">
-                                    <label for="senderSignature">Digital Signature Text (Leave blank for physical sign)</label>
+                                    <label for="senderSignature">Digital Signature Text (Cursive Ink)</label>
                                     <input type="text" id="senderSignature" value="Apex Digital Studio" placeholder="e.g. Your Name or Company" readonly class="input-readonly">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BANK & UPI DETAILS SECTION -->
+                        <div class="panel-section">
+                            <div class="section-title-action">
+                                <h3>🏦 Bank & UPI Details</h3>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="bankName">Bank Name</label>
+                                    <input type="text" id="bankName" placeholder="e.g. HDFC Bank" readonly class="input-readonly">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankHolder">Account Holder</label>
+                                    <input type="text" id="bankHolder" placeholder="e.g. Vipin Kumar" readonly class="input-readonly">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankAccNo">Account Number</label>
+                                    <input type="text" id="bankAccNo" placeholder="e.g. 50200012345678" readonly class="input-readonly">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankIfsc">IFSC Code</label>
+                                    <input type="text" id="bankIfsc" placeholder="e.g. HDFC0001234" readonly class="input-readonly">
+                                </div>
+                                <div class="form-group col-span-2">
+                                    <label for="bankUpi">UPI ID (Scan to Pay QR)</label>
+                                    <input type="text" id="bankUpi" placeholder="e.g. vipin@upi" readonly class="input-readonly">
                                 </div>
                             </div>
                         </div>
@@ -436,6 +478,9 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</textarea>
                         <!-- Invoice Header -->
                         <div class="invoice-brand-block">
                             <div class="brand-left">
+                                <div class="invoice-logo-container hidden-element" id="prevLogoContainer">
+                                    <img id="prevLogoImage" src="" alt="Business Logo" class="invoice-logo-img">
+                                </div>
                                 <h2 id="prevSenderName" class="invoice-title-sender">Apex Digital Studio</h2>
                                 <p id="prevSenderEmail" class="invoice-text-sender">hello@apexdigital.com</p>
                                 <p id="prevSenderPhone" class="invoice-text-sender">+91 98765 43210</p>
@@ -512,21 +557,66 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</textarea>
 
                         <!-- Footer and Terms -->
                         <div class="invoice-footer-block">
-                            <div class="footer-notes">
-                                <h4 class="notes-heading">Payment Terms & Instructions:</h4>
-                                <p id="prevNotes">Thank you for your business! Payment is requested within 15 days of invoice date. 
-HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</p>
+                            <div class="footer-left-col">
+                                <div class="footer-notes">
+                                    <h4 class="notes-heading">Payment Terms & Instructions:</h4>
+                                    <p id="prevNotes">Thank you for your business! Payment is requested within 15 days of invoice date.</p>
+                                </div>
+                                
+                                <div class="invoice-payment-details hidden-element" id="prevPaymentDetailsContainer">
+                                    <h4 class="notes-heading mt-12">Bank Transfer Details:</h4>
+                                    <div class="bank-details-grid">
+                                        <div><span class="detail-label">Bank:</span> <span id="prevBankName">---</span></div>
+                                        <div><span class="detail-label">Holder:</span> <span id="prevBankHolder">---</span></div>
+                                        <div><span class="detail-label">A/C No:</span> <span id="prevBankAccNo">---</span></div>
+                                        <div><span class="detail-label">IFSC:</span> <span id="prevBankIfsc">---</span></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="footer-sign">
-                                <div id="prevSignatureText" class="signature-cursive">Apex Digital Studio</div>
-                                <div class="signature-line"></div>
-                                <p class="signature-lbl">Authorized Signature</p>
+                            
+                            <div class="footer-right-col">
+                                <div class="upi-qr-container hidden-element" id="prevUpiQrContainer">
+                                    <img id="prevUpiQrImage" src="" alt="UPI QR Code" class="upi-qr-img">
+                                    <p class="upi-qr-label" id="prevUpiText">Scan to Pay via UPI</p>
+                                </div>
+                                <div class="footer-sign">
+                                    <div class="signature-wrapper">
+                                        <div id="prevSignatureText" class="signature-cursive">Apex Digital Studio</div>
+                                    </div>
+                                    <div class="signature-line"></div>
+                                    <p class="signature-lbl">Authorized Signature</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
         </main>
+        
+        <!-- App Footer (Hidden during Print) -->
+        <footer class="app-footer no-print">
+            <div class="footer-top-row">
+                <div class="footer-brand">
+                    <div class="footer-logo-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    </div>
+                    <div>
+                        <h4>InvoiciFly Studio</h4>
+                        <p>100% Free & Private Offline Invoice Builder</p>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <button type="button" class="footer-link-btn" id="openFeedbackBtn">💬 Feedback & Suggestions</button>
+                    <button type="button" class="footer-link-btn" id="openPrivacyBtn">🔒 Privacy Policy</button>
+                    <button type="button" class="footer-link-btn" id="openTermsBtn">📄 Terms of Service</button>
+                    <button type="button" class="footer-link-btn" id="openAboutBtn">ℹ️ About Us</button>
+                    <button type="button" class="footer-link-btn" id="openSecurityBtn">🛡️ Security Guarantee</button>
+                </div>
+            </div>
+            <div class="footer-bottom-row">
+                <p class="footer-left-txt">Designed & Built with ❤️ by <span class="footer-author-name">Vipin...</span></p>
+                <p class="footer-right-txt">© 2026 InvoiciFly. All rights reserved.</p>
+            </div>
+        </footer>
     </div>
 
     <!-- Modals (Hidden during Print) -->
@@ -579,9 +669,93 @@ HDFC Bank | A/C: 50200012345678 | IFSC: HDFC0001234</p>
         </div>
     </div>
 
+    <!-- Custom Info & Utility Modals -->
+    <div id="feedbackModal" class="modal no-print">
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2>💬 Feedback & Suggestions</h2>
+                <button id="closeFeedbackModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="pin-modal-body">
+                <p class="pin-modal-desc">Share your feedback to help us improve InvoiciFly:</p>
+                <div class="form-group form-group-mb">
+                    <textarea id="feedbackText" rows="4" class="feedback-textarea-field" placeholder="Write your feedback or suggestions here..."></textarea>
+                </div>
+                <button type="button" id="submitFeedbackBtn" class="btn btn-primary btn-full-width">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="privacyModal" class="modal no-print">
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2>🔒 Privacy Policy</h2>
+                <button id="closePrivacyModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="pin-modal-body text-left">
+                <p class="pin-modal-desc"><strong>100% Free & Offline-First Privacy Guarantee:</strong></p>
+                <ul class="modal-info-list">
+                    <li><strong>Local Processing:</strong> All invoices and client data are stored locally in your browser's Local Storage.</li>
+                    <li><strong>No Data Transfer:</strong> Your financial records, business profile, and client details never leave your computer.</li>
+                    <li><strong>No Accounts:</strong> You do not need to register an account or share your email to build invoices.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal no-print">
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2>📄 Terms of Service</h2>
+                <button id="closeTermsModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="pin-modal-body text-left">
+                <p class="pin-modal-desc"><strong>Simple Terms of Use:</strong></p>
+                <ul class="modal-info-list">
+                    <li><strong>License:</strong> InvoiciFly is free to use for personal and commercial invoicing purposes.</li>
+                    <li><strong>Disclaimer:</strong> The software is provided "as is", without warranty of any kind. You are responsible for verifying invoice calculations and tax compliance.</li>
+                    <li><strong>Data Ownership:</strong> You retain complete ownership of all data created using this tool.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal no-print">
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2>ℹ️ About Us</h2>
+                <button id="closeAboutModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="pin-modal-body text-left">
+                <p class="pin-modal-desc"><strong>InvoiciFly Studio v1.0.2</strong></p>
+                <p class="mb-12">A premium, offline-first invoice builder and CRM client ledger designed to help freelancers and small studios manage billing effortlessly.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="securityModal" class="modal no-print">
+        <div class="modal-content modal-content-sm">
+            <div class="modal-header">
+                <h2>🛡️ Security Guarantee</h2>
+                <button id="closeSecurityModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="pin-modal-body text-left">
+                <p class="pin-modal-desc"><strong>Bank-Grade Local Security:</strong></p>
+                <ul class="modal-info-list">
+                    <li><strong>Local Storage Encryption:</strong> Data is sandboxed inside your local web browser storage.</li>
+                    <li><strong>Secure Admin Lock:</strong> Business settings and payment details are protected by an Admin PIN.</li>
+                    <li><strong>No Cloud Vulnerabilities:</strong> Since there is no database server or API endpoint, your data cannot be leaked through web attacks.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Mobile Preview Toggle (Hidden on Desktop) -->
+    <button id="mobilePreviewToggleBtn" class="mobile-preview-toggle no-print">
+        <span id="mobileToggleIcon">👁️</span>
+        <span id="mobileToggleText">View Preview</span>
+    </button>
+
     <script src="app.js?v=1.0.2"></script>
 </body>
 </html>
-
-
-j

@@ -1834,12 +1834,12 @@ document.addEventListener('DOMContentLoaded', () => {
         mobilePreviewToggleBtn.addEventListener('click', () => {
             const isPreviewActive = workspaceGrid.classList.toggle('show-preview-active');
             if (isPreviewActive) {
-                mobileToggleIcon.textContent = '📝';
+                mobileToggleIcon.textContent = '⬆️';
                 mobileToggleText.textContent = 'Edit Invoice';
                 // Trigger dynamic scale calculation for mobile viewport
                 updateMobileScale();
             } else {
-                mobileToggleIcon.textContent = '👁️';
+                mobileToggleIcon.textContent = '⬇️';
                 mobileToggleText.textContent = 'View Preview';
             }
         });

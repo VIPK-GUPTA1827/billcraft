@@ -1731,9 +1731,9 @@ document.addEventListener('DOMContentLoaded', () => {
         senderSignatureInput.value = inv.senderSignature || '';
         prevSignatureText.textContent = inv.senderSignature || '';
         if ((inv.senderSignature || '').trim() === '') {
-            prevSignatureText.style.display = 'none';
+            prevSignatureText.classList.add('hidden-element');
         } else {
-            prevSignatureText.style.display = 'inline-block';
+            prevSignatureText.classList.remove('hidden-element');
         }
 
         // Client details
@@ -1755,11 +1755,10 @@ document.addEventListener('DOMContentLoaded', () => {
         taxTypeSelect.value = inv.taxType || 'none';
         taxRateInput.value = inv.taxRate;
 
-        // Toggle tax rate group visibility depending on taxType
         if (taxTypeSelect.value === 'none') {
-            taxRateGroup.style.display = 'none';
+            taxRateGroup.classList.add('hidden-element');
         } else {
-            taxRateGroup.style.display = 'block';
+            taxRateGroup.classList.remove('hidden-element');
         }
 
         invNotesInput.value = inv.notes || '';
